@@ -44,9 +44,14 @@ namespace Travel.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
+            // fetches using _context.ApplicationUsers all users and check Email with received request.Email)
+            // if Email is found it means user which wants to register with that Email already exists, mail is used
             if (_context.ApplicationUsers.Any(u => u.Email == request.Email))
                 return BadRequest("Email already exists");
 
+
+            // it proceeds here is above chec is passed
+            // here builds object user based on all input received from request (from the form where user inserted data)
             var user = new ApplicationUser
             {
                 UserName = request.UserName,
@@ -58,31 +63,46 @@ namespace Travel.API.Controllers
                 IsAdmin = request.IsAdmin
             };
 
+            // now ads that new user using _context (which is connection with a SQL db), cretes ApplicationUsers object from previously
+            // filled object user
             _context.ApplicationUsers.Add(user);
+            // calls function SaveChangesAsync to save the _context and waits to complete
             await _context.SaveChangesAsync();
+
+            // return 200 OK to the frontend (Swagger)
             return Ok();
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
+            // check via SQL db using context is the user with that name stored in request.UserName (this is what user writes in the web form)
+            // exists? 
             var user = await _context.ApplicationUsers
                 .FirstOrDefaultAsync(u => u.UserName == request.UserName);
 
+
+            // is user does not exists it returns this down
             if (user == null)
             {
                 Console.WriteLine("User not found");
                 return Unauthorized();
             }
 
+            // id user exists thsi will be written, it is just for debugging
             Console.WriteLine($"User found: {user.UserName}");
             Console.WriteLine($"Incoming password: {request.Password}");
             Console.WriteLine($"Stored hash: {user.PasswordHash}");
             Console.WriteLine($"Password match: {BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash)}");
 
+            // here is checked pasword written in the web form with the saved password in the SQL db
+            // it uses class BCrypt to dercypt saved password, because password are not saved in plain text but encrypted
+            // and this is decrypting, and if does not match it returns error
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
                 return Unauthorized();
 
+
+            // if password validation passed code comes here and it is returnd to teh fronend (Swagger)
             var token = _jwtTokenGenerator.Generate(user);
             return Ok(new { token });
         }
