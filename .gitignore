@@ -23,7 +23,7 @@
 *.log
 
 # dotnet watch
-**/Properties/launchSettings.json
+#**/Properties/launchSettings.json
 
 # NUGET
 *.nupkg
