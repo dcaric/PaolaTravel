@@ -1,4 +1,6 @@
+using System.Security.Claims;
 using System.Text;
+using Humanizer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Travel.API.Data;
@@ -72,6 +74,12 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSet
 builder.Services.AddSingleton<JwtTokenGenerator>();
 
 // adds authentication middleware using "Bearer"
+/*
+ * This code configures JWT-based authentication in your ASP.NET Core app. When a user sends a 
+ * JWT token (like in Authorization: Bearer xxx), this setup tells the app:
+ * How to validate the token
+ * What values (claims) in the token should be used for things like User.Identity.Name
+ */
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
@@ -84,13 +92,35 @@ builder.Services.AddAuthentication("Bearer")
             ValidAudience = jwtSettings.Audience,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+            // means: Use the claim with type ClaimTypes.Name as the value for User.Identity.Name
+            // this is used to pass the 
+            /*NameClaimType = ClaimTypes.Name tells the system
+             * "Use the Name claim from JWT as the current user's identity."
+             * This directly affects what User.Identity.Name will return.
+             * You should match this to whatever claim you're putting in the token for the user's name.
+             * THIS IS USED IN Travet.Web / 
+             */
+            NameClaimType = ClaimTypes.Name 
+
         };
     });
 
 builder.Services.AddAuthorization();
 
 // JWT TOKEN PART END ****************************************************************************
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.WithOrigins("https://localhost:7066") // frontend origin
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 
 
 var app = builder.Build();
@@ -103,7 +133,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("AllowFrontend");
 // enabling JWT generation for each endpoint (securing each API request)
 app.UseAuthentication();
 app.UseAuthorization();

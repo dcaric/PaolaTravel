@@ -13,7 +13,7 @@ namespace Travel.Web.Controllers
         public AccountController(IHttpClientFactory httpClientFactory)
         {
             _httpClient = httpClientFactory.CreateClient();
-            _httpClient.BaseAddress = new Uri("https://localhost:7172/"); // Your Travel.API base URL
+            _httpClient.BaseAddress = new Uri("https://localhost:7172/");
         }
 
         public IActionResult Login()
@@ -51,12 +51,33 @@ namespace Travel.Web.Controllers
                 if (result != null)
                 {
                     HttpContext.Session.SetString("JWToken", result.Token);
-                    return RedirectToAction("Index", "Home");
+                    Console.WriteLine($"JWToken: {result.Token} ");
+                    //var stored = HttpContext.Session.GetString("JWToken");
+                    //Console.WriteLine("Retrieved from session: " + stored);
+                    TempData["JwtToken"] = result.Token;
+
+                    // Extract claims from token
+                    var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+                    var token = handler.ReadJwtToken(result.Token);
+                    var isAdmin = token.Claims.FirstOrDefault(c => c.Type == "isAdmin")?.Value == "true";
+                    // Redirect based on role
+                    if (isAdmin)
+                        return RedirectToAction("Profile", "ApplicationUser");
+                    else
+                        return RedirectToAction("UserProfile", "ApplicationUser");
                 }
             }
 
             ModelState.AddModelError("", "Login failed.");
             return View(model);
+        }
+
+
+        [HttpPost]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear(); // remove all session data, including JWToken
+            return RedirectToAction("Login", "Account");
         }
 
     }

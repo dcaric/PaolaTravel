@@ -104,6 +104,8 @@ namespace Travel.API.Controllers
 
             // if password validation passed code comes here and it is returnd to teh fronend (Swagger)
             var token = _jwtTokenGenerator.Generate(user);
+            Console.WriteLine($"BACKEND token: {token}");
+
             return Ok(new { token });
         }
     }

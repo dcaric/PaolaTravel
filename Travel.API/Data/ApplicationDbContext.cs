@@ -73,6 +73,5 @@ namespace Travel.API.Data
             modelBuilder.Entity<Log>().ToTable("Log");
 
         }
-
     }
 }

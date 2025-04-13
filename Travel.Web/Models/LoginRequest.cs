@@ -1,5 +1,8 @@
-﻿public class LoginRequest
+﻿namespace Travel.Web.Models
 {
-    public string UserName { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
+    public class LoginRequest
+    {
+        public string UserName { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
 }
