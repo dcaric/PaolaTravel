@@ -20,3 +20,9 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.loginRegisterBackground {
+    background-color: #e6f2ff;
+    min-height: 100vh;
+    padding-top: 10px;
+}

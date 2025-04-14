@@ -55,16 +55,8 @@ namespace Travel.Web.Controllers
                     //var stored = HttpContext.Session.GetString("JWToken");
                     //Console.WriteLine("Retrieved from session: " + stored);
                     TempData["JwtToken"] = result.Token;
-
-                    // Extract claims from token
-                    var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
-                    var token = handler.ReadJwtToken(result.Token);
-                    var isAdmin = token.Claims.FirstOrDefault(c => c.Type == "isAdmin")?.Value == "true";
-                    // Redirect based on role
-                    if (isAdmin)
-                        return RedirectToAction("Profile", "ApplicationUser");
-                    else
-                        return RedirectToAction("UserProfile", "ApplicationUser");
+                    // redirect to the Dashboard
+                    return RedirectToAction("Dashboard", "Home");
                 }
             }
 

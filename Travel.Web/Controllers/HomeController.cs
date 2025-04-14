@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc;
 using Travel.Web.Models;
 
@@ -28,5 +29,20 @@ namespace Travel.Web.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IActionResult Dashboard()
+        {
+            var token = HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(token)) return RedirectToAction("Login", "Account");
+
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+            var isAdmin = jwtToken.Claims.FirstOrDefault(c => c.Type == "isAdmin")?.Value;
+
+            ViewBag.IsAdmin = isAdmin == "True" || isAdmin == "true" || isAdmin == "1";
+            TempData["JwtToken"] = token;
+            return View();
+        }
+
     }
 }

@@ -34,7 +34,12 @@
                         }
                         else
                         {
-                            if (isAdmin)
+                            <!-- DASHBOARD LINK -->
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Home" asp-action="Dashboard">Dashboard</a>
+                            </li>
+
+                            @if (isAdmin)
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-controller="ApplicationUser" asp-action="Profile">Admin Profile</a>
@@ -61,8 +66,7 @@
 
     <!-- Main Content Placeholder -->
     <main role="main" class="pb-3">
-        <!-- Injects each view main content -->
-        @RenderBody() 
+        @RenderBody()
     </main>
 
     <!-- FOOTER -->
@@ -76,7 +80,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Styles", required: false)
-    <!-- adds extra scripts from views -->
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
