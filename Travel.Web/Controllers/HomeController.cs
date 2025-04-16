@@ -40,6 +40,7 @@ namespace Travel.Web.Controllers
             var isAdmin = jwtToken.Claims.FirstOrDefault(c => c.Type == "isAdmin")?.Value;
 
             ViewBag.IsAdmin = isAdmin == "True" || isAdmin == "true" || isAdmin == "1";
+            // TempData is used to transffer data to the nest redirection place
             TempData["JwtToken"] = token;
             return View();
         }

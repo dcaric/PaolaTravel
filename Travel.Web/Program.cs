@@ -42,6 +42,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+
+
+// FIRST PAGE WHICH IS LOADED
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

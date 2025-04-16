@@ -33,34 +33,46 @@ namespace Travel.Web.Controllers
 
             if (response.IsSuccessStatusCode)
             {
+                // TempData is used to transffer data to the nest redirection place
+                TempData["SuccessMessage"] = "Registration successful! You can now log in.";
                 return RedirectToAction("Login");
             }
 
-            ModelState.AddModelError("", "Registration failed.");
+            TempData["ErrorMessage"] = "Registration failed. Please try again.";
             return View(model);
         }
 
+
+        // When user insertes usernam / password it sends /Account/Login POST with { username, passwor } in the payload
+        // it comes here and this function sends request towards BACKEND as api/auth/login
+        // 
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequest model)
         {
             var response = await _httpClient.PostAsJsonAsync("api/auth/login", model);
 
-            if (response.IsSuccessStatusCode)
+            // response is response from the backend
+            if (response.IsSuccessStatusCode) // check if 200 OK result code
             {
+
+                // when 200 OK is passed it reads now detail part of response and this is response.Content
                 var result = await response.Content.ReadFromJsonAsync<JwtResponse>();
                 if (result != null)
                 {
                     HttpContext.Session.SetString("JWToken", result.Token);
-                    Console.WriteLine($"JWToken: {result.Token} ");
-                    //var stored = HttpContext.Session.GetString("JWToken");
-                    //Console.WriteLine("Retrieved from session: " + stored);
-                    TempData["JwtToken"] = result.Token;
-                    // redirect to the Dashboard
+                    // TempData is used to transffer data to the nest redirection place
+                    // this is also .Net specific feature
+                    TempData["SuccessMessage"] = "Successful log in.";
+
+                    // this is .Net redirection function meaning: "Dashboard" is razor page (cshtml) and "Home" is folder where
+                    // Dashboard.cshtml is located
+                    // SO IF BACKEND CONFIRMS USER'S CREDENTIOALS (Usernam + password) IT RETURNS 200 OK
+                    // JWT token also and code comes here where Home/Dashboard,cshtml is loaded
                     return RedirectToAction("Dashboard", "Home");
                 }
             }
 
-            ModelState.AddModelError("", "Login failed.");
+            TempData["ErrorMessage"] = "Login failed. Invalid username or password.";
             return View(model);
         }
 

@@ -1,7 +1,8 @@
 ﻿@{
     ViewData["Title"] = "Dashboard";
     var isAdmin = (ViewBag.IsAdmin as bool?) ?? false;
-    var token = TempData["JwtToken"];
+    var token = TempData["JwtToken"]; // reads JWT token from previous file where it was saved via TempData (it was AccountController)
+    var isLoggedIn = Context.Session.GetString("JWToken") != null;
 }
 @section Styles {
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
@@ -38,11 +39,11 @@
             text-align: center;
         }
 
-            .dashboard-content h2 {
-                font-size: 2.5rem;
-                margin-bottom: 30px;
-                text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
-            }
+        .dashboard-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+        }
 
         .dashboard-card {
             background-color: rgba(255, 255, 255, 0.85);
@@ -83,7 +84,17 @@
     </style>
 }
 
-<div class="landing-page">
+@if (TempData["SuccessMessage"] != null && isLoggedIn)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+
+<!--   BODY OF FASHBOARD page and for this page it is responsible Controllers/DashboardConreoller.cs -->
+<div class="landing-page" >
     <div class="overlay"></div>
 
     <div class="dashboard-content">
@@ -94,16 +105,15 @@
                 <ul class="list-group">
                     @if (isAdmin)
                     {
-                        <li class="list-group-item"><a href="/UserManagement">User Management</a></li>
-                        <li class="list-group-item"><a href="/TripManagement">Trip Management</a></li>
-                        <li class="list-group-item"><a href="/GuideManagement">Guide Management</a></li>
-                        <li class="list-group-item"><a href="/TripGuideManagement">Trip and Guide Management</a></li>
-                        <li class="list-group-item"><a href="/DestinationManagement">Destination Management</a></li>
+                        <li class="list-group-item"><a href="/Dashboard/UserManagement">User Management</a></li>
+                        <li class="list-group-item"><a href="/Dashboard/TripManagement">Trip Management</a></li>
+                        <li class="list-group-item"><a href="/Dashboard/GuideManagement">Guide Management</a></li>
+                        <li class="list-group-item"><a href="/Dashboard/TripGuideManagement">Trip and Guide Management</a></li>
+                        <li class="list-group-item"><a href="/Dashboard/DestinationManagement">Destination Management</a></li>
                     }
                     else
                     {
-                        <li class="list-group-item"><a href="/ApplicationUser/UserProfile">Profile Management</a></li>
-                        <li class="list-group-item"><a href="/Wishlist">Wish List Management</a></li>
+                        <li class="list-group-item"><a href="/Dashboard/WishlistManagement">Wish List Management</a></li>
                     }
                 </ul>
             </div>

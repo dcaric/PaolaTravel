@@ -62,7 +62,7 @@ CREATE TABLE ApplicationUser (
 -- checking jtw token and user
 SELECT * FROM ApplicationUser;
 SELECT * FROM ApplicationUser WHERE UserName = 'john';
-DELETE FROM ApplicationUser WHERE UserName = 'john';
+DELETE FROM ApplicationUser WHERE UserName = 'dcaric';
 
 
 SELECT * FROM sys.tables;
