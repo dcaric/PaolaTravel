@@ -18,7 +18,15 @@
         <nav class="navbar navbar-expand-sm navbar-light" style="background-color: orange;">
             <div class="container-fluid">
                 <a class="navbar-brand text-dark" asp-controller="Home" asp-action="Index">Travel Paola</a>
-                <div class="collapse navbar-collapse">
+
+                <!-- Toggle button for mobile -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Navbar links container -->
+                <div class="collapse navbar-collapse" id="mainNavbar">
                     <ul class="navbar-nav ms-auto">
                         @{
                             var isLoggedIn = Context.Session.GetString("JWToken") != null;
@@ -34,7 +42,6 @@
                         }
                         else
                         {
-                            <!-- DASHBOARD LINK -->
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Home" asp-action="Dashboard">Dashboard</a>
                             </li>
@@ -63,6 +70,7 @@
             </div>
         </nav>
     </header>
+
 
     <!-- Main Content Placeholder -->
     <main role="main" class="pb-3">
