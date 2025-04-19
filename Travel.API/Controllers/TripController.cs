@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Travel.API.Data;
 using Travel.API.Models;
+using Travel.API.Dtos;
 
 namespace Travel.API.Controllers
 {
@@ -34,6 +35,15 @@ namespace Travel.API.Controllers
 
 
         // **********************************************************
+
+        // GET: api/trip/full
+        [HttpGet("full")]
+        public async Task<ActionResult<IEnumerable<Trip>>> GetFullTrips()
+        {
+            return await _context.Trips.ToListAsync();
+        }
+
+
         // GET: api/trip
         [HttpGet] // Marks the method as handling HTTP GET requests for /api/trip.
         /*
@@ -44,7 +54,25 @@ namespace Travel.API.Controllers
         {
             // await _context.Trips.ToListAsync(); - Uses Entity Framework Core to asynchronously fetch all records from the Trips table.
             // Returns the list of trips as JSON.
-            return await _context.Trips.ToListAsync();
+            //return await _context.Trips.ToListAsync();
+
+            var trips = await _context.Trips
+                .Include(t => t.Guides)
+                .ToListAsync();
+
+            var result = trips.Select(t => new TripDto
+            {
+                Id = t.Id,
+                Name = t.Name,
+                Guides = t.Guides.Select(g => new GuideDto
+                {
+                    Id = g.Id,
+                    FirstName = g.FirstName,
+                    LastName = g.LastName
+                }).ToList()
+            }).ToList();
+
+            return Ok(result);
         }
 
         /*
@@ -153,5 +181,38 @@ namespace Travel.API.Controllers
 
             return NoContent();
         }
+
+
+
+
+        [HttpPut("{id}/guides")]
+        public async Task<IActionResult> UpdateTripGuides(int id, [FromBody] TripGuideUpdate dto)
+        {
+            var trip = await _context.Trips.Include(t => t.Guides).FirstOrDefaultAsync(t => t.Id == id);
+            if (trip == null) return NotFound();
+
+            var guides = await _context.Guides.Where(g => dto.GuideIds.Contains(g.Id)).ToListAsync();
+            trip.Guides = guides;
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+    }
+
+
+
+    // DTOs for GUide Trip relation
+    public class TripDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public List<GuideDto> Guides { get; set; } = new();
+    }
+
+    public class GuideDto
+    {
+        public int Id { get; set; }
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
     }
 }

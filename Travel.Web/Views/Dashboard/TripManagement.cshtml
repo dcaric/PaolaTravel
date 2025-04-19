@@ -102,7 +102,7 @@
         const token = localStorage.getItem("jwtToken");
 
         function loadTrips() {
-            fetch("https://localhost:7172/api/trip", {
+            fetch("https://localhost:7172/api/trip/full", {
                 headers: { "Authorization": "Bearer " + token }
             })
             .then(res => res.json())
@@ -168,7 +168,7 @@
             const method = isEdit ? "PUT" : "POST";
             const url = isEdit
                 ? `https://localhost:7172/api/trip/${id}`
-                : "https://localhost:7172/api/trip";
+                : "https://localhost:7172/api/trip/full";
 
             fetch(url, {
                 method,
