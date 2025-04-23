@@ -64,6 +64,7 @@ SELECT * FROM ApplicationUser;
 SELECT * FROM ApplicationUser WHERE UserName = 'john';
 DELETE FROM ApplicationUser WHERE UserName = 'dcaric';
 
+SELECT * FROM TripGuide;
 
 SELECT * FROM sys.tables;
 
