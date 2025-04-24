@@ -64,6 +64,10 @@
         <div class="dashboard-card">
             <button class="btn btn-success mb-3" onclick="showAddForm()">+ Add Trip</button>
 
+
+            <!-- search input and pagination controls -->
+            <input type="text" id="searchInput" class="form-control mb-2" placeholder="Search trips..." oninput="onSearchInput()" />
+
             <div class="table-responsive">
                 <table class="table table-bordered table-striped">
                     <thead class="table-light">
@@ -93,6 +97,9 @@
                 <button class="btn btn-primary" onclick="submitForm()">Save</button>
                 <button class="btn btn-secondary" onclick="hideForm()">Cancel</button>
             </div>
+
+            <div id="pagination" class="mb-3"></div>
+
         </div>
     </div>
 </div>
@@ -100,17 +107,32 @@
 @section Scripts {
     <script>
         const token = localStorage.getItem("jwtToken");
+        let currentPage = 1;
+        const pageSize = 5;
 
-        function loadTrips() {
-            fetch("https://localhost:7172/api/trip", {
+        function onSearchInput() {
+            currentPage = 1;
+            loadTrips(currentPage);
+        }
+
+        function loadTrips(page = 1) {
+            if (typeof page !== 'number') return;
+
+            currentPage = page;
+            const query = document.getElementById("searchInput")?.value || "";
+
+            fetch(`https://localhost:7172/api/trip/search?page=${page}&pageSize=${pageSize}&query=${encodeURIComponent(query)}`, {
                 headers: { "Authorization": "Bearer " + token }
             })
             .then(res => res.json())
-            .then(data => {
+            .then(result => {
+                const data = result.data  || result;
+                const totalPages = Math.ceil(result.totalCount / pageSize);
+
                 const tbody = document.getElementById("tripTableBody");
-                tbody.innerHTML = "";
-                data.forEach(trip => {
-                    tbody.innerHTML += `
+                tbody.innerHTML = data.length === 0
+                    ? `<tr><td colspan="7" class="text-center">No trips found.</td></tr>`
+                    : data.map(trip => `
                         <tr>
                             <td>${trip.name}</td>
                             <td class="d-none d-sm-table-cell">${trip.description || ""}</td>
@@ -122,15 +144,25 @@
                                 <button class="btn btn-sm btn-warning" onclick="editTrip(${trip.id}, '${trip.name}', \`${trip.description || ""}\`, '${trip.dateFrom}', '${trip.dateTo}', ${trip.price}, ${trip.destinationId})">Edit</button>
                                 <button class="btn btn-sm btn-danger" onclick="deleteTrip(${trip.id})">Delete</button>
                             </td>
-                        </tr>`;
-                });
+                        </tr>`).join("");
+
+                const paginationDiv = document.getElementById("pagination");
+                paginationDiv.innerHTML = "";
+                for (let i = 1; i <= totalPages; i++) {
+                    const btn = document.createElement("button");
+                    btn.textContent = i;
+                    btn.className = `btn btn-sm btn-${i === page ? "primary" : "light"} me-1`;
+                    btn.addEventListener("click", () => loadTrips(i));
+                    paginationDiv.appendChild(btn);
+                }
             });
         }
 
         function showAddForm() {
             document.getElementById("addEditForm").style.display = "block";
             document.getElementById("formTitle").innerText = "Add Trip";
-            ["tripId", "name", "description", "dateFrom", "dateTo", "price", "destinationId"].forEach(id => document.getElementById(id).value = "");
+            ["tripId", "name", "description", "dateFrom", "dateTo", "price", "destinationId"]
+                .forEach(id => document.getElementById(id).value = "");
         }
 
         function editTrip(id, name, description, dateFrom, dateTo, price, destinationId) {
@@ -151,7 +183,6 @@
 
         function submitForm() {
             const idValue = document.getElementById("tripId").value;
-            const id = parseInt(idValue);
             const isEdit = !!idValue;
 
             const trip = {
@@ -163,11 +194,11 @@
                 destinationId: parseInt(document.getElementById("destinationId").value)
             };
 
-            if (isEdit) trip.id = id;
+            if (isEdit) trip.id = parseInt(idValue);
 
             const method = isEdit ? "PUT" : "POST";
             const url = isEdit
-                ? `https://localhost:7172/api/trip/${id}`
+                ? `https://localhost:7172/api/trip/${trip.id}`
                 : "https://localhost:7172/api/trip";
 
             fetch(url, {
@@ -185,7 +216,7 @@
                         alert("Failed to save trip.");
                     });
                 }
-                loadTrips();
+                loadTrips(currentPage);
                 hideForm();
             })
             .catch(err => {
@@ -201,10 +232,11 @@
                     headers: {
                         "Authorization": "Bearer " + token
                     }
-                }).then(() => loadTrips());
+                }).then(() => loadTrips(currentPage));
             }
         }
 
-        document.addEventListener("DOMContentLoaded", loadTrips);
+        document.addEventListener("DOMContentLoaded", () => loadTrips(currentPage));
     </script>
 }
+

@@ -197,6 +197,44 @@ namespace Travel.API.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
+
+
+
+        // FOR PAGINATION
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<Trip>>> SearchTrips(
+            [FromQuery] string? query = null,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10)
+         {
+            if (page < 1 || pageSize < 1) return BadRequest("Invalid paging parameters.");
+
+            var tripQuery = _context.Trips.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                tripQuery = tripQuery.Where(t => t.Name.Contains(query) || (t.Description != null && t.Description.Contains(query)));
+            }
+
+            var totalCount = await tripQuery.CountAsync();
+            var trips = await tripQuery
+                .OrderBy(t => t.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+
+            var response = new
+            {
+                TotalCount = totalCount,
+                Page = page,
+                PageSize = pageSize,
+                Data = trips,
+            };
+
+            return Ok(response);
+        }
+
     }
 
 
