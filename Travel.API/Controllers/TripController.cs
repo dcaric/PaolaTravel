@@ -110,6 +110,10 @@ namespace Travel.API.Controllers
             _context.Trips.Add(trip);
             await _context.SaveChangesAsync();
 
+            // logging
+            await LogAction("Create", "Trip", trip.Id);
+
+
             return CreatedAtAction(nameof(GetTrip), new { id = trip.Id }, trip);
         }
 
@@ -151,6 +155,10 @@ namespace Travel.API.Controllers
                 }
             }
 
+            // logging
+            await LogAction("Update", "Trip", trip.Id);
+
+
             return NoContent();
         }
 
@@ -178,6 +186,10 @@ namespace Travel.API.Controllers
 
             _context.Trips.Remove(trip);
             await _context.SaveChangesAsync();
+
+            // logging
+            await LogAction("Delete", "Trip", trip.Id);
+
 
             return NoContent();
         }
@@ -234,6 +246,28 @@ namespace Travel.API.Controllers
 
             return Ok(response);
         }
+
+
+        // FOR LOGGING TRIPS
+        private async Task LogAction(string action, string entity, int entityId)
+        {
+            var userIdClaim = User.FindFirst("userId")?.Value;
+            if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+                return; // skip logging if userId not found
+
+            var log = new Log
+            {
+                UserId = userId,
+                Action = action,
+                Entity = entity,
+                EntityId = entityId,
+                Timestamp = DateTime.Now
+            };
+
+            _context.Logs.Add(log);
+            await _context.SaveChangesAsync();
+        }
+
 
     }
 

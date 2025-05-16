@@ -19,7 +19,7 @@ namespace Travel.API.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        /*[HttpGet]
         public async Task<ActionResult<IEnumerable<Log>>> GetLogs()
         {
             return await _context.Logs.Include(l => l.User).ToListAsync();
@@ -69,6 +69,28 @@ namespace Travel.API.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }*/
+
+
+        // Returns the last N logs (ordered by Timestamp DESC)
+        [HttpGet("get/{n}")]
+        public async Task<ActionResult<IEnumerable<Log>>> GetLastNLogs(int n)
+        {
+            var logs = await _context.Logs
+                .Include(l => l.User)
+                .OrderByDescending(l => l.Timestamp)
+                .Take(n)
+                .ToListAsync();
+
+            return logs;
         }
+
+        // Returns total number of logs
+        [HttpGet("count")]
+        public async Task<ActionResult<int>> GetLogCount()
+        {
+            return await _context.Logs.CountAsync();
+        }
+
     }
 }
