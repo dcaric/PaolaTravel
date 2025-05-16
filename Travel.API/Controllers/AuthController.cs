@@ -44,6 +44,8 @@ namespace Travel.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
+            Console.WriteLine($"User IsAdmin: {request.IsAdmin}");
+
             // fetches using _context.ApplicationUsers all users and check Email with received request.Email)
             // if Email is found it means user which wants to register with that Email already exists, mail is used
             if (_context.ApplicationUsers.Any(u => u.Email == request.Email))
@@ -76,6 +78,8 @@ namespace Travel.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
+            Console.WriteLine($"User: {request.UserName}");
+
             // check via SQL db using context is the user with that name stored in request.UserName (this is what user writes in the web form)
             // exists? 
             var user = await _context.ApplicationUsers

@@ -29,6 +29,8 @@ namespace Travel.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(ApplicationUser model)
         {
+            Console.WriteLine($"User IsAdmin: {model.IsAdmin ?? false}");
+
             var response = await _httpClient.PostAsJsonAsync("api/auth/register", model);
 
             if (response.IsSuccessStatusCode)
