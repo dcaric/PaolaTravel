@@ -65,20 +65,22 @@
             <button class="btn btn-success mb-3" onclick="showAddForm()">+ Add User</button>
 
             <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Username</th>
-                            <th class="d-none d-sm-table-cell">Email</th>
-                            <th class="d-none d-md-table-cell">First Name</th>
-                            <th class="d-none d-md-table-cell">Last Name</th>
-                            <th class="d-none d-lg-table-cell">Phone</th>
-                            <th class="d-none d-lg-table-cell">Admin</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="userTableBody"></tbody>
-                </table>
+                <div class="table-scroll-wrapper">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Username</th>
+                                <th class="d-none d-sm-table-cell">Email</th>
+                                <th class="d-none d-md-table-cell">First Name</th>
+                                <th class="d-none d-md-table-cell">Last Name</th>
+                                <th class="d-none d-lg-table-cell">Phone</th>
+                                <th class="d-none d-lg-table-cell">Admin</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody"></tbody>
+                    </table>
+                </div>
             </div>
 
             <div id="addEditForm" style="display:none;">

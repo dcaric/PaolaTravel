@@ -43,3 +43,8 @@ html, body {
     min-height: 100vh;
     padding-top: 10px;
 }
+
+.table-scroll-wrapper {
+    max-height: 400px;
+    overflow-y: auto;
+}

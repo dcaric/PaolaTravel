@@ -247,6 +247,50 @@ namespace Travel.API.Controllers
             return Ok(response);
         }
 
+        // GET: api/trip/{id}/destinations
+        [HttpGet("{id}/destinations")]
+        public async Task<ActionResult<IEnumerable<DestinationDto>>> GetTripDestinations(int id)
+        {
+            var trip = await _context.Trips
+                .Include(t => t.Destinations)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (trip == null) return NotFound();
+
+            var result = trip.Destinations.Select(d => new DestinationDto
+            {
+                Id = d.Id,
+                Name = d.Name,
+                Country = d.Country
+            }).ToList();
+
+            return Ok(result);
+        }
+
+
+
+        // PUT: api/trip/{id}/destinations
+        [HttpPut("{id}/destinations")]
+        public async Task<IActionResult> UpdateTripDestinations(int id, [FromBody] List<int> destinationIds)
+        {
+            var trip = await _context.Trips
+                .Include(t => t.Destinations)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (trip == null)
+                return NotFound();
+
+            var destinations = await _context.Destinations
+                .Where(d => destinationIds.Contains(d.Id))
+                .ToListAsync();
+
+            trip.Destinations = destinations;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+
 
         // FOR LOGGING TRIPS
         private async Task LogAction(string action, string entity, int entityId)

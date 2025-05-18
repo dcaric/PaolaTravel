@@ -69,16 +69,18 @@
             <button class="btn btn-success mb-3" onclick="showAddForm()">+ Add Trip Guide Relation</button>
 
             <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Trip</th>
-                            <th>Assigned Guides</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tripGuideTableBody"></tbody>
-                </table>
+                <div class="table-scroll-wrapper">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Trip</th>
+                                <th>Assigned Guides</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tripGuideTableBody"></tbody>
+                    </table>
+                </div>
             </div>
 
             <div id="addEditForm" style="display:none;">
@@ -86,6 +88,7 @@
                 <select id="tripSelector" class="form-control mb-2"></select>
                 <select id="guideSelector" class="form-control mb-2" multiple></select>
                 <button class="btn btn-primary" onclick="submitRelation()">Save</button>
+                <button class="btn btn-primary" onclick="clearGuideSelection()">Clear Guides</button>
                 <button class="btn btn-secondary" onclick="hideForm()">Cancel</button>
             </div>
         </div>
@@ -182,6 +185,12 @@
                 }
             });
         }
+
+        function clearGuideSelection() {
+            const guideSel = document.getElementById("guideSelector");
+            Array.from(guideSel.options).forEach(opt => opt.selected = false);
+        }
+
 
         document.addEventListener("DOMContentLoaded", loadData);
     </script>

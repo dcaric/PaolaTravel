@@ -65,18 +65,20 @@
             <button class="btn btn-success mb-3" onclick="showAddForm()">+ Add to Wishlist</button>
 
             <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Trip Name</th>
-                            <th>Date From</th>
-                            <th>Date To</th>
-                            <th>Price</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="wishlistTableBody"></tbody>
-                </table>
+                <div class="table-scroll-wrapper">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Trip Name</th>
+                                <th>Date From</th>
+                                <th>Date To</th>
+                                <th>Price</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="wishlistTableBody"></tbody>
+                    </table>
+                </div>
             </div>
 
             <div id="addForm" style="display:none;">

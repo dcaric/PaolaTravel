@@ -65,16 +65,18 @@
             <button class="btn btn-success mb-3" onclick="showAddForm()">+ Add Destination</button>
 
             <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Name</th>
-                            <th class="d-none d-sm-table-cell">Country</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="destinationTableBody"></tbody>
-                </table>
+                <div class="table-scroll-wrapper">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Name</th>
+                                <th class="d-none d-sm-table-cell">Country</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="destinationTableBody"></tbody>
+                    </table>
+                </div>
             </div>
 
             <div id="addEditForm" style="display:none;">

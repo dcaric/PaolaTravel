@@ -65,18 +65,20 @@
             <button class="btn btn-success mb-3" onclick="showAddForm()">+ Add Guide</button>
 
             <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead class="table-light">
-                        <tr>
-                            <th>First Name</th>
-                            <th class="d-none d-sm-table-cell">Last Name</th>
-                            <th class="d-none d-md-table-cell">Email</th>
-                            <th class="d-none d-md-table-cell">Biography</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="guideTableBody"></tbody>
-                </table>
+                <div class="table-scroll-wrapper">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>First Name</th>
+                                <th class="d-none d-sm-table-cell">Last Name</th>
+                                <th class="d-none d-md-table-cell">Email</th>
+                                <th class="d-none d-md-table-cell">Biography</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="guideTableBody"></tbody>
+                    </table>
+                </div>
             </div>
 
             <div id="addEditForm" style="display:none;">
