@@ -95,6 +95,8 @@ namespace Travel.Web.Controllers
         // FOR USER PROFILE
         public IActionResult UserProfile()
         {
+            Console.WriteLine($"UserProfile");
+
             return View();
         }
 

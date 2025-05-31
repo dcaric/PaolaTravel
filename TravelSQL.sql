@@ -73,6 +73,17 @@ CREATE TABLE ApplicationUser (
 );
 
 
+CREATE TABLE TripDestination (
+    TripId INT NOT NULL,
+    DestinationId INT NOT NULL,
+    PRIMARY KEY (TripId, DestinationId),
+    FOREIGN KEY (TripId) REFERENCES Trip(Id),
+    FOREIGN KEY (DestinationId) REFERENCES Destination(Id)
+);
+
+ALTER TABLE Trip DROP CONSTRAINT FK__Trip__Destinatio__4BAC3F29;
+ALTER TABLE Trip DROP COLUMN DestinationId;
+
 -- checking jtw token and user
 SELECT * FROM ApplicationUser;
 SELECT * FROM ApplicationUser WHERE UserName = 'john';
