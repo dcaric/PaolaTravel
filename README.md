@@ -149,7 +149,7 @@ Before you begin, ensure you have the following installed:
 
 Now you should have both your ASP.NET Core API backend and your ASP.NET Core web frontend running, with the frontend communicating seamlessly with the backend to manage your travel data!
 
----
+'''
 
 ## Project Structure
 PaolaTravel/
@@ -172,7 +172,7 @@ PaolaTravel/
 └── scripts.sql           # SQL script to create database schema and populate data
 
 
----
+'''
 
 ## API Endpoints (Backend)
 
