@@ -30,6 +30,7 @@ namespace Travel.API.Controllers
                     Id = w.Id,
                     TripId = w.TripId,
                     TripName = w.Trip.Name,
+                    TripDescription = w.Trip.Description,
                     TripPrice = w.Trip.Price,
                     DesiredDateFrom = w.DesiredDateFrom,
                     DesiredDateTo = w.DesiredDateTo,
@@ -52,6 +53,8 @@ namespace Travel.API.Controllers
             var wishlist = await _context.Wishlists
                 .Include(w => w.Trip)
                 .FirstOrDefaultAsync(w => w.Id == id && w.UserId == userId);
+
+            Console.WriteLine($"whishlist");
 
             if (wishlist == null)
             {

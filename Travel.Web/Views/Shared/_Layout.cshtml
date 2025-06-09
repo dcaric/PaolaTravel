@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@{
+    ViewData["Title"] = "Login";
+    var isLoggedIn = Context.Session.GetString("JWToken") != null;
+    Console.WriteLine($"isLoggedIn  {isLoggedIn}");
+
+}﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -20,7 +26,12 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-light fixed-top" style="background-color: orange;">
             <div class="container-fluid">
-                <a class="navbar-brand text-dark" asp-controller="Home" asp-action="Index">Travel Paola</a>
+                <a class="navbar-brand text-dark">Travel Paola</a>
+
+                <!-- Page title injected into navbar -->
+                <span class="navbar-text text-white fw-bold ms-3">
+                    @ViewData["Title"]
+                </span>
 
                 <!-- Toggle button for mobile -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
@@ -32,7 +43,7 @@
                 <div class="collapse navbar-collapse" id="mainNavbar">
                     <ul class="navbar-nav ms-auto">
                         @{
-                            var isLoggedIn = Context.Session.GetString("JWToken") != null;
+                            var isLoggedIn2 = Context.Session.GetString("JWToken") != null;
                         }
                         @if (!isLoggedIn)
                         {

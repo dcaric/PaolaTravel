@@ -1,12 +1,10 @@
 html, body {
-    font-family: 'Playpen Sans Hebrew', sans-serif;
     height: 100%;
+    overflow-x: hidden;
     margin: 0;
     padding: 0;
-    height: 100%;
-    position: static; /* Only needed if you're overriding layout behavior */
-    margin-bottom: 0; /* Prevents layout bump from base styles */
     font-size: 20px;
+    overflow-y: hidden;
 }
 
 body {
@@ -22,31 +20,58 @@ main {
 
 
 @media (min-width: 768px) {
-    html {
-        font-size: 16px;
+    html, body {
+        font-size: 20px;
+    }
+    .dashboard-card {
+        font-size: 26px;
     }
 }
 
+@media (min-height: 768px) {
+    html, body {
+        font-size: 20px;
+    }
+
+    .dashboard-card {
+        font-size: 26px;
+    }
+}
+
+@media (max-width: 768px) {
+    html, body {
+        font-size: 12px;
+    }
+    .dashboard-card {
+        font-size: 10px;
+    }
+}
+
+@media (max-height: 600px) {
+    .dashboard-card {
+        font-size: 10px;
+    }
+}
+
+
 .landing-page {
-    height: 100vh;
-    background-image: url('/images/backgroundLandingPage.jpg');
-    background-color: aqua;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* Optional, if you want centered vertically */
-    text-align: center;
-    color: white;
+    justify-content: flex-start; /* content flows from top */
+    min-height: 100vh;
+    margin-top: -20px;
+    flex: 1;
+    padding: 0; /* no internal padding here */
+    background: url('/images/backgroundLandingPage.jpg') no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
 }
 
-    .landing-page .btn {
-        margin: 10px;
-        width: 150px;
-    }
+.landing-page .btn {
+    margin: 10px;
+    width: 150px;
+}
 
 .btn:focus,
 .btn:active:focus,
@@ -56,6 +81,10 @@ main {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+.btn btn-primary {
+    justify-content: center !important;
+}
+
 .loginRegisterBackground {
     background-color: #e6f2ff;
     min-height: 100vh;
@@ -63,9 +92,16 @@ main {
 }
 
 .table-scroll-wrapper {
-    max-height: 400px;
+    max-height: calc(100vh - 350px); /* adjust as needed */
     overflow-y: auto;
+    margin-top: 60px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
 }
+
+
 
 
 
@@ -76,4 +112,73 @@ main {
     text-decoration: none; /* Remove underline if present */
     padding: 8px; /* Match nav-link spacing */
     font: inherit; /* Match surrounding font */
+}
+
+.dashboard-content {
+    position: center;
+    padding-top: 120px;
+    overflow: visible;
+    align-items: center;
+    font-size: 26px;
+}
+
+
+.dashboard-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    align-items: center;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+}
+
+.dashboard-card {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #333;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
+    overflow-y: auto;
+}
+
+
+.wishlist-actions button {
+    margin-left: 10px;
+}
+
+
+.destination-actions button {
+    margin-left: 10px;
+}
+
+.trip-actions button {
+    margin-left: 10px;
+}
+
+
+.user-actions button {
+    margin-left: 10px;
+}
+
+select[multiple] {
+    height: 100px;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding-top: 40px;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 10px;
+    max-height: 80vh;
+    overflow-y: auto;
+    width: 400px;
 }
